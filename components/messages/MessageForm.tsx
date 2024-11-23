@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Message form component for creating and editing messages.
+ * Provides form validation, error handling, and submission functionality.
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -6,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 
+/** Schema for message validation */
 const messageSchema = z.object({
   content: z.string()
     .min(1, 'Message cannot be empty')
@@ -14,12 +20,26 @@ const messageSchema = z.object({
 
 type MessageFormData = z.infer<typeof messageSchema>;
 
+/** Props for the MessageForm component */
 interface MessageFormProps {
+  /** ID of the message being edited, if in edit mode */
   messageId?: string;
+  /** Initial content of the message, used in edit mode */
   initialContent?: string;
+  /** Whether the form is in edit mode */
   isEditing?: boolean;
 }
 
+/**
+ * A reusable form component for creating and editing messages.
+ * Handles form validation, submission, and error states.
+ * 
+ * @param props - The component props
+ * @param props.messageId - ID of the message being edited (optional)
+ * @param props.initialContent - Initial content for edit mode (optional)
+ * @param props.isEditing - Whether the form is in edit mode (optional)
+ * @returns A form component for message creation/editing
+ */
 export default function MessageForm({ messageId, initialContent = '', isEditing = false }: MessageFormProps) {
   const [error, setError] = useState<string>('');
   const router = useRouter();
@@ -63,13 +83,13 @@ export default function MessageForm({ messageId, initialContent = '', isEditing 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label htmlFor="content" className="block text-sm font-medium text-gray-300">
+        <label htmlFor="content" className="block text-sm font-medium text-gray-700">
           Message
         </label>
         <textarea
           {...register('content')}
           rows={4}
-          className="mt-1 p-2 block w-full rounded-md border-gray-300 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           placeholder="Write your message here..."
         />
         {errors.content && (

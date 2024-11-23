@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Main messages page component that displays all messages.
+ * Handles message listing, authentication, and user interactions.
+ */
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -5,15 +10,31 @@ import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+/** Interface for message data structure */
 interface Message {
+  /** Unique identifier for the message */
   id: string;
+  /** Content of the message */
   content: string;
+  /** Timestamp when the message was created */
   createdAt: string;
+  /** Author information */
   author: {
+    /** Username of the message author */
     username: string;
   };
 }
 
+/**
+ * Messages page component that displays all messages and handles user interactions.
+ * Features include:
+ * - Authentication check
+ * - Message listing
+ * - Create/Edit/Delete message actions
+ * - Logout functionality
+ * 
+ * @returns The messages page component
+ */
 export default function MessagesPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
