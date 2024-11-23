@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { authOptions } from '../../auth/[...nextauth]/route';
+import { MessageSigner } from '@/lib/messageSigner';
 
 // Input validation schema
 const messageSchema = z.object({
@@ -72,50 +73,34 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Validate ownership
-    const ownershipCheck = await checkMessageOwnership(params.id, session.user.id);
-    if ('error' in ownershipCheck) {
-      return NextResponse.json(
-        { error: ownershipCheck.error },
-        { status: ownershipCheck.status }
-      );
+    const data = await request.json();
+    const validatedData = messageSchema.parse(data);
+    
+    // Generate signature for the message content
+    const signature = MessageSigner.signMessage(validatedData.content);
+
+    // Check message ownership
+    const { error, status } = await checkMessageOwnership(params.id, session.user.id);
+    if (error) {
+      return NextResponse.json({ error }, { status });
     }
 
-    // Validate input
-    const body = await request.json();
-    const validatedFields = messageSchema.safeParse(body);
-
-    if (!validatedFields.success) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: validatedFields.error.errors },
-        { status: 400 }
-      );
-    }
-
-    // Update message
-    const updatedMessage = await prisma.message.update({
+    const message = await prisma.message.update({
       where: { id: params.id },
       data: {
-        content: validatedFields.data.content,
-      },
-      include: {
-        author: {
-          select: {
-            username: true,
-          },
-        },
-      },
+        content: validatedData.content,
+        signature
+      }
     });
 
-    return NextResponse.json(updatedMessage);
+    return NextResponse.json(message);
   } catch (error) {
-    console.error('Error updating message:', error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+    }
     return NextResponse.json(
       { error: 'Failed to update message' },
       { status: 500 }

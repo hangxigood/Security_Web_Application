@@ -23,7 +23,8 @@ model User {
 
 model Message {
   id        String   @id @default(uuid())
-  content   String   @db.Text
+  content   String
+  signature String   @db.Text
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   createdAt DateTime @default(now())
