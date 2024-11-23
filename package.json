@@ -9,29 +9,31 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "next": "15.0.3",
-    "next-auth": "^4.24.5",
-    "mongodb": "^6.3.0",
-    "mongoose": "^8.0.1",
-    "bcryptjs": "^2.4.3",
-    "zod": "^3.22.4",
-    "jose": "^5.1.1",
+    "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.2",
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "mysql2": "^3.6.5",
+    "next": "^14.0.3",
+    "next-auth": "^4.24.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
-    "@heroicons/react": "^2.0.18"
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/bcryptjs": "^2.4.6",
-    "postcss": "^8",
-    "tailwindcss": "^3",
+    "@types/uuid": "^9.0.7",
     "autoprefixer": "^10",
     "eslint": "^8",
-    "eslint-config-next": "14.0.3"
+    "eslint-config-next": "14.0.3",
+    "postcss": "^8",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3",
+    "typescript": "^5"
   }
 }
