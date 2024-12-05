@@ -7,7 +7,7 @@ import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/db';
 import MessageForm from '@/components/messages/MessageForm';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '../../../../lib/auth';
 
 /** Props for the EditMessagePage component */
 interface EditMessagePageProps {
